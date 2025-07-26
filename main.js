@@ -19,28 +19,36 @@ const tree = [
 
 const container = document.querySelector("#tree-container");
 
-function recursif(tree) {
+function recursif(tree, parentContainer) {
     tree.forEach((item) => {
+      const folder = document.createElement("div");
         if (item.type === 'folder') {
-            const folder = document.createElement("div");
-            folder.className = "folder-container";
-            folder.innerHTML = `<span class="btn-folder"><i class="fa-solid fa-folder" style="color: #d9f76e;"></i> ${item.name}`;
-            container.appendChild(folder);
+            const folderHeader = document.createElement("div");
+            folderHeader.className = "folder-header";
+            folderHeader.innerHTML = `<i class="fa-solid fa-folder" style="color: #d9f76e;"></i> ${item.name}`;
+            
+            const folderChildren = document.createElement("div");
+            folderChildren.className = "folder-children";
+            folderChildren.style.display = "none";
 
-            folder.addEventListener("click", function(event) {
-                const selectedFolder = event.target.closest(".btn-folder");
-                if (selectedFolder) {
-                    recursif(item.children);
-                } else return ;
+            folderHeader.addEventListener("click", function(event) {
+                event.stopPropagation();
+                if (item.children) {
+                    folderChildren.style.display = "none" ? "block" : "none";
+                    recursif(item.children, folderChildren);
+                }
             })
+            folder.appendChild(folderHeader);
+            folder.appendChild(folderChildren);
+            parentContainer.appendChild(folder);
         }
         if (item.type === "file") {
-            const file = document.createElement("span");
-            file.className = "branch-origin";
+            const file = document.createElement("div");
+            file.className = "file-type";
             file.innerHTML = `<i class="fa-solid fa-file" style="color: #74C0FC;"></i> ${item.name}`;
-            container.appendChild(file)
+            parentContainer.appendChild(file)
         }
     })
 }
 
-recursif(tree);
+recursif(tree, container);
