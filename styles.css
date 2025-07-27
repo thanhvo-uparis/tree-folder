@@ -10,10 +10,30 @@ body {
 }
 
 #tree-container {
-    display: flex;
-    flex-direction: column;
+  width: 460px;
+  height: 655px;
+  padding: 17px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  background-color: #333;
+  color: #fff;
+}
+
+#title {
+  margin-bottom: 10px;
 }
 
 .folder-children {
   margin: 8px 0 8px 23px;
+}
+
+.fa-solid {
+  font-size: 12px;
+  font-weight:900;
+  margin-right: 3px;
+}
+
+.fa-solid:hover {
+  cursor: pointer;
 }

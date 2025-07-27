@@ -23,10 +23,19 @@ function recursif(tree, parentContainer) {
     tree.forEach((item) => {
       const folder = document.createElement("div");
         if (item.type === 'folder') {
+            let isOpen = false;
+            let isRendered = false;
+
             const folderHeader = document.createElement("div");
             folderHeader.className = "folder-header";
-            folderHeader.innerHTML = `<i class="fa-solid fa-folder" style="color: #d9f76e;"></i> ${item.name}`;
-            
+            const iconFolder = document.createElement("i");
+            iconFolder.className = "fa-solid fa-greater-than";
+            iconFolder.style.color = "rgb(84 196 240)";
+            const folderName = document.createElement("span");
+            folderName.textContent = item.name;
+            folderHeader.appendChild(iconFolder);
+            folderHeader.appendChild(folderName);
+
             const folderChildren = document.createElement("div");
             folderChildren.className = "folder-children";
             folderChildren.style.display = "none";
@@ -34,8 +43,13 @@ function recursif(tree, parentContainer) {
             folderHeader.addEventListener("click", function(event) {
                 event.stopPropagation();
                 if (item.children) {
-                    folderChildren.style.display = "none" ? "block" : "none";
-                    recursif(item.children, folderChildren);
+                    isOpen = !isOpen;
+                    isOpen ? iconFolder.className = "fa-solid fa-v" : iconFolder.className = "fa-solid fa-greater-than";
+                    folderChildren.style.display = isOpen ? "block" : "none";
+                    if (isOpen && !isRendered) {
+                        recursif(item.children, folderChildren);
+                        isRendered = true;
+                    }
                 }
             })
             folder.appendChild(folderHeader);
@@ -45,7 +59,19 @@ function recursif(tree, parentContainer) {
         if (item.type === "file") {
             const file = document.createElement("div");
             file.className = "file-type";
-            file.innerHTML = `<i class="fa-solid fa-file" style="color: #74C0FC;"></i> ${item.name}`;
+            const fileName = document.createElement("span");
+            fileName.textContent = item.name;
+            const iconFile = document.createElement("i");
+            if (item.name.endsWith(".js")) {
+              iconFile.className = "fa-brands fa-square-js"
+              iconFile.style.color = "#FFD43B";
+              fileName.style.color = "#FFD43B";
+            } else {
+              iconFile.className = "fa-solid fa-file";
+              iconFile.style.color = "#74C0FC";
+            }
+            file.appendChild(iconFile);
+            file.appendChild(fileName);
             parentContainer.appendChild(file)
         }
     })
