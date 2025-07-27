@@ -54,6 +54,10 @@ body {
     transform: translateY(0);
 }
 
+.folder-header:hover {
+    background: rgba(96, 165, 250, 0.15); /* Highlight mờ khi hover */
+}
+
 .file-type {
     display: flex;
     align-items: center;
@@ -63,6 +67,10 @@ body {
     background: #343434;
     color: #e0e0e0;
     font-size: 0.95em;
+}
+
+.file-type:hover {
+    background: rgba(96, 165, 250, 0.15); /* Highlight mờ khi hover */
 }
 
 .fa-solid, .fa-brands {
