@@ -143,16 +143,19 @@ const tree = [
 
 const container = document.querySelector("#tree-container");
 const contextMenu = document.querySelector(".context-menu");
+const inputEdit = "";
 
+//show context menu
 container.oncontextmenu = (event) => {
   event.preventDefault();
   contextMenu.style.display = "block";
+
   Object.assign(contextMenu.style, {
     top: event.clientY + 'px',
     left: event.clientX + 'px'
   })
 }
-
+// hidden context menu
 container.addEventListener("mousedown", function(event) {
     if (event.button === 0) {
       contextMenu.style.display = "none";
@@ -162,40 +165,82 @@ container.addEventListener("mousedown", function(event) {
 function recursif(tree, parentContainer) {
     tree.forEach((item) => {
       const folder = document.createElement("div");
-        if (item.type === 'folder') {
-            let isOpen = false;
-            let isRendered = false;
+      let currentValue = "";
+      //add input
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = currentValue;
+      const handleRename = function(nameElement, headerElement, event) {
+                if (event.button = 2) {
+                  currentValue = item.name;
+                  input.value = currentValue;
+                  //action de rename folder
+                  contextMenu.addEventListener("click", function(event) {
+                  const btnRename = event.target.closest("#btn-rename");
+                  const btnDelete = event.target.closest("#btn-delete");
+                  
+                  if (btnRename) {
+                    nameElement.textContent = "";
+                    headerElement.appendChild(input);
+                    input.focus();
+                    contextMenu.style.display = "none";
+                    //blur
+                    input.addEventListener("blur", (event) => {
+                      item.name = input.value.trim();
+                      nameElement.textContent = item.name;
+                      headerElement.removeChild(input);
+                    })
+                    input.addEventListener("keydown", (event) => {
+                      if (event.key === "Enter") {
+                          input.blur();
+                        }
+                    })
+                  }
+                  if (btnDelete) {
+                    console.log("da an vao nut delete");
+                  }
+                })
+              }
+            }
+      if (item.type === 'folder') {
+          let isOpen = false;
+          let isRendered = false;
 
-            const folderHeader = document.createElement("div");
-            folderHeader.className = "folder-header";
-            const iconFolder = document.createElement("i");
-            iconFolder.className = "fa-solid fa-greater-than";
-            iconFolder.style.color = "rgb(84 196 240)";
-            const folderName = document.createElement("span");
-            folderName.textContent = item.name;
-            folderHeader.appendChild(iconFolder);
-            folderHeader.appendChild(folderName);
+          const folderHeader = document.createElement("div");
+          folderHeader.className = "folder-header";
+          const iconFolder = document.createElement("i");
+          iconFolder.className = "fa-solid fa-greater-than";
+          iconFolder.style.color = "rgb(84 196 240)";
+          const folderName = document.createElement("span");
+          folderName.className = "folder-name";
+          folderName.textContent = item.name;
+          folderHeader.appendChild(iconFolder);
+          folderHeader.appendChild(folderName);
 
-            const folderChildren = document.createElement("div");
-            folderChildren.className = "folder-children";
-            folderChildren.style.display = "none";
+          const folderChildren = document.createElement("div");
+          folderChildren.className = "folder-children";
+          folderChildren.style.display = "none";
 
-            folderHeader.addEventListener("click", function(event) {
-                event.stopPropagation();
-                if (item.children) {
-                    isOpen = !isOpen;
-                    isOpen ? iconFolder.className = "fa-solid fa-v" : iconFolder.className = "fa-solid fa-greater-than";
-                    folderChildren.style.display = isOpen ? "block" : "none";
-                    if (isOpen && !isRendered) {
-                        recursif(item.children, folderChildren);
-                        isRendered = true;
-                    }
-                }
-            })
-            folder.appendChild(folderHeader);
-            folder.appendChild(folderChildren);
-            parentContainer.appendChild(folder);
-        }
+          folderHeader.addEventListener("click", function(event) {
+              event.stopPropagation();
+              if (item.children) {
+                  isOpen = !isOpen;
+                  isOpen ? iconFolder.className = "fa-solid fa-v" : iconFolder.className = "fa-solid fa-greater-than";
+                  folderChildren.style.display = isOpen ? "block" : "none";
+                  if (isOpen && !isRendered) {
+                      recursif(item.children, folderChildren);
+                      isRendered = true;
+                  }
+              }
+          })
+          folder.appendChild(folderHeader);
+          folder.appendChild(folderChildren);
+          parentContainer.appendChild(folder);
+
+          folderHeader.onmousedown = (event) => {
+              handleRename(folderName, folderHeader, event);
+          }     
+      }
         if (item.type === "file") {
             const file = document.createElement("div");
             file.className = "file-type";
@@ -213,6 +258,11 @@ function recursif(tree, parentContainer) {
             file.appendChild(iconFile);
             file.appendChild(fileName);
             parentContainer.appendChild(file)
+
+            file.onmousedown = (event) => {
+              handleRename(fileName, file, event);
+          }  
+            
         }
     })
 }
