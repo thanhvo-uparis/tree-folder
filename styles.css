@@ -92,3 +92,24 @@ body {
     background: #60a5fa;
     border-radius: 3px;
 }
+
+.context-menu {
+  position: fixed;
+  width: 120px;
+  height: 90px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  display: none;
+}
+
+.btn-context {
+  text-align: center;
+  margin: 5px 0;
+  list-style-type: none;
+  color: #1e1e1e;
+}
+
+.btn-context:hover {
+  cursor: pointer;
+}

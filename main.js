@@ -142,6 +142,22 @@ const tree = [
 ];
 
 const container = document.querySelector("#tree-container");
+const contextMenu = document.querySelector(".context-menu");
+
+container.oncontextmenu = (event) => {
+  event.preventDefault();
+  contextMenu.style.display = "block";
+  Object.assign(contextMenu.style, {
+    top: event.clientY + 'px',
+    left: event.clientX + 'px'
+  })
+}
+
+container.addEventListener("mousedown", function(event) {
+    if (event.button === 0) {
+      contextMenu.style.display = "none";
+    } 
+})
 
 function recursif(tree, parentContainer) {
     tree.forEach((item) => {
